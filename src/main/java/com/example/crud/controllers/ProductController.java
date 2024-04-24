@@ -3,6 +3,7 @@ package com.example.crud.controllers;
 import com.example.crud.domain.product.Product;
 import com.example.crud.domain.product.ProductRepository;
 import com.example.crud.domain.product.RequestProduct;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class ProductController{
         //Product product = repository.getReferenceById(data.id());
         Optional<Product> optionalProduct = repository.findById(data.id());
         if(optionalProduct.isEmpty()){
-            return ResponseEntity.notFound().build();
+            throw new EntityNotFoundException();
         }
         Product product = optionalProduct.get();
         product.setName(data.name());
@@ -50,7 +51,7 @@ public class ProductController{
     public ResponseEntity deleteProduct(@PathVariable String id){
         Optional<Product> optionalProduct = repository.findById(id);
         if(optionalProduct.isEmpty()){
-            return ResponseEntity.notFound().build();
+            throw new EntityNotFoundException();
         }
         Product product = optionalProduct.get();
         product.setActive(false);
